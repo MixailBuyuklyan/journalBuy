@@ -5,7 +5,7 @@
         <meta charset="UTF-8">
         <title>JournalBuy</title>
 
-        <link rel="stylesheet" type="text/css" href="../static/style.css">
+
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
         <!-- Bootstrap CSS -->
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css"
