@@ -1,32 +1,49 @@
 package com.Buyuklyan.journalBuy.domain;
 
 import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
 import java.util.Set;
 
 @Entity
 @Table(name = "usr")
-public class User {
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long id;
+public class User implements UserDetails {
 
-    private String username;
+    @Id
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "usr_id")
+    private Long usr_id;
+
+    private String username; // Для ввода адреса электронной почты
     private String password;
     private boolean active;
     private String activationCode;
 
     @ElementCollection(targetClass = Role.class, fetch = FetchType.EAGER)
-    @CollectionTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"))
+    @CollectionTable(name = "usr_role", joinColumns = @JoinColumn(name = "usr_id"))
     @Enumerated(EnumType.STRING)
     private Set<Role> roles;
 
-    // Геттеры и сеттеры
-    public Long getId() {
-        return id;
+    // Конструкторы
+    public User() {}
+
+    public User(String username, String password, boolean active, String activationCode, Set<Role> roles) {
+        this.username = username;
+        this.password = password;
+        this.active = active;
+        this.activationCode = activationCode;
+        this.roles = roles;
     }
 
-    public void setId(Long id) {
-        this.id = id;
+    // Геттеры и сеттеры
+    public Long getUsr_id() {
+        return usr_id;
+    }
+
+    public void setUsr_id(Long usr_id) {
+        this.usr_id = usr_id;
     }
 
     public String getUsername() {
@@ -80,5 +97,31 @@ public class User {
 
     public boolean isLector() {
         return roles.contains(Role.LECTOR);
+    }
+
+    // Методы интерфейса UserDetails
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return getRoles();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isActive();
     }
 }

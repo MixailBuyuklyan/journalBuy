@@ -10,6 +10,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.util.Collections;
+import java.util.List;
+
 @Controller
 public class MainController {
     @Autowired
@@ -30,23 +33,34 @@ public class MainController {
         return "main";
     }
 
-    @PostMapping("/add")
-    public String add(@RequestParam String fio, @RequestParam String groupp, Model model) {
-        Student student = new Student(fio, groupp);
-        studentRepo.save(student);
-        Iterable<Student> students = studentRepo.findAll();
-        model.addAttribute("students", students);
-        return "main";
-    }
+//    @PostMapping("/add")
+//    public String add(@RequestParam String fio, @RequestParam String groupp, Model model) {
+//        Student student = new Student(fio, groupp);
+//        studentRepo.save(student);
+//        Iterable<Student> students = studentRepo.findAll();
+//        model.addAttribute("students", students);
+//        return "main";
+//    }
 
-    @PostMapping("/filter")
-    public String filter(@RequestParam String filter, Model model) {
+    @PostMapping("filter")
+    public String filter(
+            @RequestParam(required = false) Long familyId,
+            @RequestParam(required = false) Long firstnameId,
+            @RequestParam(required = false) Long secondnameId,
+            Model model
+    ) {
         Iterable<Student> students;
-        if (filter != null && !filter.isEmpty()) {
-            students = studentRepo.findByNamegroup(filter);
+
+        // Если переданы все три ID
+        if (familyId != null && firstnameId != null && secondnameId != null) {
+            Student student = studentRepo.findByFamily_IdAndFirstname_IdAndSecondname_Id(
+                    familyId, firstnameId, secondnameId
+            );
+            students = student != null ? List.of(student) : Collections.emptyList();
         } else {
             students = studentRepo.findAll();
         }
+
         model.addAttribute("students", students);
         return "main";
     }

@@ -1,63 +1,85 @@
 package com.Buyuklyan.journalBuy.domain.entity;
 
+import com.Buyuklyan.journalBuy.domain.User;
 import jakarta.persistence.*;
 
-
 @Entity
-
 @Table(name = "student")
-
 public class Student {
+
     @Id
-    @Column(name="student_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
+    @Column(name = "student_id")
+    @GeneratedValue(strategy = GenerationType.SEQUENCE) // Исправлено GenerateValue на GeneratedValue
     private Long id;
 
-    @Column(name="name", length = 100)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "family_id")
+    private Family family;
 
-    @Column(name = "namegroup", length = 100)
-    private String namegroup;
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "firstname_id") // Исправлено fistname_id на firstname_id
+    private Firstname firstname;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = {CascadeType.ALL})
+    @JoinColumn(name = "secondname_id")
+    private Secondname secondname;
+
+    @OneToOne
+    @JoinColumn(name = "usr_id")
+    private User studentuser;
+
+
 
     // Конструктор с параметрами
-    public Student(String name, String namegroup) {
-        this.name = name;
-        this.namegroup = namegroup;
+    public Student(Family family, Firstname firstname, Secondname secondname, User studentuser) {
+        this.family = family;
+        this.firstname = firstname; // Исправлено fistname на firstname
+        this.secondname = secondname;
+        this.studentuser = studentuser;
     }
 
-    // Конструктор по умолчанию
-    public Student() {
-        this.name = "6eзымянный";
-    }
+    // Конструктор по умолчанию (необходим для JPA)
+    public Student() {}
 
-    // Геттер для id
+    // Геттеры и сеттеры
     public Long getId() {
         return id;
     }
 
-    // Сеттер для id
-    public void setId(long id) {
+    public void setId(Long id) { // Исправлено long на Long
         this.id = id;
     }
 
-    // Геттер для name
-    public String getName() {
-        return name;
+    public Family getFamily() {
+        return family;
     }
 
-    // Сеттер для name
-    public void setName(String name) {
-        this.name = name;
+    public void setFamily(Family family) {
+        this.family = family;
     }
 
-    // Геттер для namegroup
-    public String getNamegroup() {
-        return namegroup;
+    public Firstname getFirstname() {
+        return firstname;
     }
 
-    // Сеттер для namegroup
-    public void setNamegroup(String namegroup) {
-        this.namegroup = namegroup;
+    public void setFirstname(Firstname firstname) {
+        this.firstname = firstname;
+    }
+
+    public Secondname getSecondname() {
+        return secondname;
+    }
+
+    public void setSecondname(Secondname secondname) {
+        this.secondname = secondname;
+    }
+
+    public User getStudentuser() {
+        return studentuser;
+    }
+
+    public void setStudentuser(User studentuser) {
+        this.studentuser = studentuser;
     }
 }
 

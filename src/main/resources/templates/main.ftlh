@@ -24,8 +24,7 @@
         <tbody>
         <#list students as student>
             <tr>
-                <td>${student.getName()}</td>
-                <td>${student.getNamegroup()}</td>
+                <td>${student.getFirstname().getName()}</td>
             </tr>
         </#list>
         </tbody>
