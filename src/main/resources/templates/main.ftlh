@@ -4,7 +4,7 @@
     <div>
         <form method="post">
             <input type="text" name="fio" placeholder="Введите ФИО" />
-            <input type="text" name="groupp" placeholder="Введите номер группы" />
+
             <button type="submit">Добавить</button>
         </form>
     </div>
@@ -24,7 +24,8 @@
         <tbody>
         <#list students as student>
             <tr>
-                <td>${student.getFirstname().getName()}</td>
+                <td>${student.getName()}</td>
+
             </tr>
         </#list>
         </tbody>

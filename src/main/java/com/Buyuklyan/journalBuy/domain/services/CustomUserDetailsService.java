@@ -4,6 +4,7 @@ package com.Buyuklyan.journalBuy.domain.services;
 import com.Buyuklyan.journalBuy.domain.User;
 import com.Buyuklyan.journalBuy.domain.repository.UserRepo;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.authority.AuthorityUtils;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -24,15 +25,12 @@ public class CustomUserDetailsService implements UserDetailsService {
         if (user == null) {
             throw new UsernameNotFoundException("Пользователь не найден: " + username);
         }
-
-        Set<SimpleGrantedAuthority> authorities = user.getRoles().stream()
-                .map(role -> new SimpleGrantedAuthority(role.name()))
-                .collect(Collectors.toSet());
-
+        String role = String.valueOf(user.getRoles());
+        role = "ROLE_" + role.substring(1, role.length() - 1);
         return new org.springframework.security.core.userdetails.User(
                 user.getUsername(),
                 user.getPassword(),
-                authorities
+                AuthorityUtils.commaSeparatedStringToAuthorityList(role)
         );
     }
 }

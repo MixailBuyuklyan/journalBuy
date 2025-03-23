@@ -13,6 +13,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -28,28 +29,36 @@ public class UserService implements UserDetailsService {
         User user = new User();
         user.setUsername(username);
         user.setPassword(passwordEncoder.encode(password));
-
         Set<Role> roles = new HashSet<>();
         roles.add(Role.STUDENT);
         user.setRoles(roles);
-
         return save(user);
     }
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+        // Поиск пользователя по имени
         User user = userRepository.findByUsername(username);
+
+        // Если пользователь не найден, выбрасываем исключение
         if (user == null) {
             throw new UsernameNotFoundException("User not found: " + username);
         }
-        return user;
+
+        // Возвращаем пользователя как объект UserDetails
+        return (UserDetails) user;
     }
 
     public User save(User user) {
-        User userFromDB = userRepository.findByUsername(user.getUsername());
-        if (userFromDB == null) {
-            userFromDB = userRepository.save(user);
-        }
+        User userFromDB = userRepository.save(user);
         return userFromDB;
+    }
+    public User findById(Long id) {
+        return userRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+    }
+
+    public List<User> findALl(){
+        return userRepository.findAll();
     }
 }

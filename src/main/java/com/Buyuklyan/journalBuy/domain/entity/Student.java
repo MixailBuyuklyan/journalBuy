@@ -6,21 +6,20 @@ import jakarta.persistence.*;
 @Entity
 @Table(name = "student")
 public class Student {
-
     @Id
     @Column(name = "student_id")
-    @GeneratedValue(strategy = GenerationType.SEQUENCE) // Исправлено GenerateValue на GeneratedValue
+    @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "family_id")
     private Family family;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = {CascadeType.ALL})
-    @JoinColumn(name = "firstname_id") // Исправлено fistname_id на firstname_id
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
+    @JoinColumn(name = "fistname_id")
     private Firstname firstname;
 
-    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = {CascadeType.ALL})
+    @ManyToOne(fetch = FetchType.LAZY, optional = true, cascade = CascadeType.ALL)
     @JoinColumn(name = "secondname_id")
     private Secondname secondname;
 
@@ -29,24 +28,27 @@ public class Student {
     private User studentuser;
 
 
+    public String getName() {
+        return family.getName() + " " + firstname.getName().substring(1, 1) + ". " + secondname.getName().substring(1, 1) + ".";
+    }
 
-    // Конструктор с параметрами
+    public Student() {
+    }
+
     public Student(Family family, Firstname firstname, Secondname secondname, User studentuser) {
         this.family = family;
-        this.firstname = firstname; // Исправлено fistname на firstname
+        this.firstname = firstname;
         this.secondname = secondname;
         this.studentuser = studentuser;
     }
 
-    // Конструктор по умолчанию (необходим для JPA)
-    public Student() {}
 
-    // Геттеры и сеттеры
+
     public Long getId() {
         return id;
     }
 
-    public void setId(Long id) { // Исправлено long на Long
+    public void setId(Long id) {
         this.id = id;
     }
 
@@ -82,4 +84,3 @@ public class Student {
         this.studentuser = studentuser;
     }
 }
-

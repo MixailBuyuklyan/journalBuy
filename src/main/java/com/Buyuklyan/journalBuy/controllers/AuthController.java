@@ -12,19 +12,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
 public class AuthController {
-
     @Autowired
     private UserService userService;
-
     @Autowired
     private StudentService studentService;
-
     @Autowired
     private FamilyService familyService;
-
     @Autowired
     private FirstnameService firstnameService;
-
     @Autowired
     private SecondnameService secondnameService;
 
@@ -43,13 +38,12 @@ public class AuthController {
                                @RequestParam String lastname,
                                @RequestParam String firstname,
                                @RequestParam String secondname, Model model) {
-
-        User userFromDB = userService.registerUser(user.getUsername(), user.getPassword());
-
         if (lastname.equals("") || firstname.equals("") || secondname.equals("")) {
-            model.addAttribute("message", "Должны быть указаны фамилия, имя и отчество");
+            model.addAttribute("message", "Должны быть указаны Фамилия, Имя и Отчество");
             return "registration";
         }
+
+        User userFromDB = userService.registerUser(user.getUsername(), user.getPassword());
 
         Family family = familyService.save(lastname);
         Firstname firstname1 = firstnameService.save(firstname);
